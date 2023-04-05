@@ -3,18 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Libraries\Responder\ResponseBuilder;
+use Illuminate\Http\JsonResponse;
 use PHPUnit\Util\Json;
 
 class monitoringController extends Controller
 {
-    public function uptime()
+    public function uptime(): JsonResponse
     {
         $uptime = shell_exec('uptime');
         $response = new ResponseBuilder();
         return  $response->setData(["uptime" => $uptime])->setMessage('It was successful')->respond();
     }
 
-    public function getServerInfo(){
+    public function getServerInfo() : JsonResponse
+    {
         $uname = shell_exec('uname -rsoi');
         $host = shell_exec('hostname');
         $ip = shell_exec('hostname -I');
@@ -23,7 +25,8 @@ class monitoringController extends Controller
         return  $response->setData(['uName' =>  $uname , 'host' => $host , 'ip' => $ip])->setMessage('It was successful')->respond();
     }
 
-    public function diskUsage(){
+    public function diskUsage() : JsonResponse
+    {
         $disktotal = disk_total_space('/'); //DISK usage
         $disktotalsize = $disktotal / 1073741824;
 
@@ -38,7 +41,8 @@ class monitoringController extends Controller
         return  $response->setData(['diskUse' => $diskuse,'diskTotalSize' => $disktotalsize,'diskUsedSize' => $diskusedize])->setMessage('It was successful')->respond();
     }
 
-    public function cpuAndRam(){
+    public function cpuAndRam() : JsonResponse
+    {
         //RAM usage
         $free = shell_exec('free');
         $free = (string) trim($free);
@@ -71,7 +75,8 @@ class monitoringController extends Controller
     }
 
 
-    public function onlineUser(){
+    public function onlineUser() : JsonResponse
+    {
         $count = shell_exec('ps -aux | grep sshd | grep priv -c');
 
         $response = new ResponseBuilder();
