@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Libraries\Responder\ResponseBuilder;
+use PHPUnit\Util\Json;
+
 class monitoringController extends Controller
 {
-    /**
-     * @return false|string|null
-     */
     public function uptime()
     {
         $uptime = shell_exec('uptime');
-        return response()->json(['uptime' => $uptime]);
+        $response = new ResponseBuilder();
+        return  $response->setData(["uptime" => $uptime])->setMessage('It was successful')->respond();
     }
 
     public function getServerInfo(){
@@ -18,7 +19,8 @@ class monitoringController extends Controller
         $host = shell_exec('hostname');
         $ip = shell_exec('hostname -I');
 
-        return response()->json(['uName' =>  $uname , 'host' => $host , 'ip' => $ip]);
+        $response = new ResponseBuilder();
+        return  $response->setData(['uName' =>  $uname , 'host' => $host , 'ip' => $ip])->setMessage('It was successful')->respond();
     }
 
     public function diskUsage(){
@@ -32,7 +34,8 @@ class monitoringController extends Controller
         $diskuse1   = round(100 - (($diskusedize / $disktotalsize) * 100));
         $diskuse = round(100 - ($diskuse1)) . '%';
 
-        return response()->json(['diskUse' => $diskuse,'diskTotalSize' => $disktotalsize,'diskUsedSize' => $diskusedize]);
+        $response = new ResponseBuilder();
+        return  $response->setData(['diskUse' => $diskuse,'diskTotalSize' => $disktotalsize,'diskUsedSize' => $diskusedize])->setMessage('It was successful')->respond();
     }
 
     public function cpuAndRam(){
@@ -63,6 +66,15 @@ class monitoringController extends Controller
         $cpu_load = sys_getloadavg();
         $load = $cpu_load[0] . '% / 100%';
 
-        return response()->json(['memory' => $memory,'totalRAM' => $totalram,'usedMEMInGB' =>$usedmemInGB ,'load' => $load]);
+        $response = new ResponseBuilder();
+        return  $response->setData(['memory' => $memory,'totalRAM' => $totalram,'usedMEMInGB' =>$usedmemInGB ,'load' => $load])->setMessage('It was successful')->respond();
+    }
+
+
+    public function onlineUser(){
+        $count = shell_exec('ps -aux | grep sshd | grep priv -c');
+
+        $response = new ResponseBuilder();
+        return  $response->setData(['count' => $count])->setMessage('It was successful')->respond();
     }
 }
