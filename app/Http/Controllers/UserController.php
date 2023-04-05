@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 
 use App\Libraries\Responder\Facades\ResponderFacade;
 use App\Libraries\Responder\ResponseBuilder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\Process\Process;
 
 class UserController extends Controller
 {
-    public function create(Request $request)
+    public function create(Request $request): JsonResponse
     {
         $Data =  $this->validate($request , [
             'username' => 'required',
@@ -31,5 +32,33 @@ class UserController extends Controller
 
         $response = new ResponseBuilder();
         return  $response->setMessage('User created successfully')->respond();
+    }
+
+    public function disable(Request $request)
+    {
+        $data = $this->validate($request , [
+           'username' => 'required'
+        ]);
+
+        $username = $data['username'];
+
+        shell_exec("usermod -L -e 1 {$username}");
+
+        $response = new ResponseBuilder();
+        return  $response->setMessage('User disable successfully')->respond();
+    }
+
+    public function enable(Request $request)
+    {
+        $data = $this->validate($request , [
+            'username' => 'required'
+        ]);
+
+        $username = $data['username'];
+
+        shell_exec("usermod -e -1 -U {$username}");
+
+        $response = new ResponseBuilder();
+        return  $response->setMessage('User enable successfully')->respond();
     }
 }
