@@ -11,3 +11,4 @@ $router->get('/cpuAndRam' ,'monitoringController@cpuAndRam');
 $router->get('/onlineUser' ,'monitoringController@onlineUser');
 
 $router->post('/users/create' ,'UserController@create');
+$router->post('/users/disable' ,'UserController@disable');
