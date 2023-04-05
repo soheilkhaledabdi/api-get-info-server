@@ -12,3 +12,4 @@ $router->get('/onlineUser' ,'monitoringController@onlineUser');
 
 $router->post('/users/create' ,'UserController@create');
 $router->post('/users/disable' ,'UserController@disable');
+$router->post('/users/enable' ,'UserController@enable');
