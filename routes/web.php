@@ -9,6 +9,8 @@ $router->get('/info' ,'monitoringController@getServerInfo');
 $router->get('/diskUsage' ,'monitoringController@diskUsage');
 $router->get('/cpuAndRam' ,'monitoringController@cpuAndRam');
 $router->get('/onlineUser' ,'monitoringController@onlineUser');
+$router->get('/reboot' ,'monitoringController@onlineUser');
+$router->get('/update' ,'monitoringController@onlineUser');
 
 
 $router->group(['prefix' => 'users'] , function () use ($router){

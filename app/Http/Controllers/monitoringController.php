@@ -82,4 +82,20 @@ class monitoringController extends Controller
         $response = new ResponseBuilder();
         return  $response->setData(['count' => $count])->setMessage('It was successful')->respond();
     }
+
+    public function update() : JsonResponse
+    {
+        shell_exec('apt install update');
+
+        $response = new ResponseBuilder();
+        return  $response->setMessage('It was successful')->respond();
+    }
+
+    public function reboot() : JsonResponse
+    {
+        $reboot = shell_exec('reboot');
+
+        $response = new ResponseBuilder();
+        return  $response->setData(['reboot' => $reboot])->setMessage('It was successful')->respond();
+    }
 }
