@@ -20,5 +20,7 @@ $router->group(['prefix' => 'users'] , function () use ($router){
     $router->post('/delete' ,'UserController@enable');
     $router->post('/check' ,'UserController@check_user_exsit');
     $router->post('/active' ,'UserController@is_user_active');
+    $router->get('/online' ,'UserController@online');
+
 });
 

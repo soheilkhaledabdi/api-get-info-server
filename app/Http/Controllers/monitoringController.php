@@ -74,15 +74,6 @@ class monitoringController extends Controller
         return  $response->setData(['memory' => $memory,'totalRAM' => $totalram,'usedMEMInGB' =>$usedmemInGB ,'load' => $load])->setMessage('It was successful')->respond();
     }
 
-
-    public function onlineUser() : JsonResponse
-    {
-        $count = shell_exec('ps -aux | grep sshd | grep priv -c');
-
-        $response = new ResponseBuilder();
-        return  $response->setData(['count' => $count])->setMessage('It was successful')->respond();
-    }
-
     public function update() : JsonResponse
     {
         shell_exec('apt install update');

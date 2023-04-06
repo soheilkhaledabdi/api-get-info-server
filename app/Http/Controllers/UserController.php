@@ -125,4 +125,13 @@ class UserController extends Controller
         }
         return  $response->setData(false)->setMessage("There is a problem or user does not exist!")->respond();
     }
+
+
+    public function online() : JsonResponse
+    {
+        $count = shell_exec('ps -aux | grep sshd | grep priv -c');
+
+        $response = new ResponseBuilder();
+        return  $response->setData(['count' => $count])->setMessage('It was successful')->respond();
+    }
 }
