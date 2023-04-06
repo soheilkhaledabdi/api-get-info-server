@@ -62,4 +62,37 @@ class UserController extends Controller
         $response = new ResponseBuilder();
         return  $response->setMessage('User enable successfully')->respond();
     }
+
+
+    public function delete(Request $request): JsonResponse
+    {
+        $data = $this->validate($request , [
+            'username' => 'required'
+        ]);
+
+        shell_exec("userdel -r {$data['username']}");
+
+        $response = new ResponseBuilder();
+
+        return  $response->setMessage('User delete successfully')->respond();
+    }
+
+    public function check_user_exsit(Request $request): JsonResponse
+    {
+        $data = $this->validate($request , [
+            'username' => 'required'
+        ]);
+
+        $output = '';
+
+        exec("id -u {$data['username']}", $output);
+
+        if (count($output) > 0 ) {
+            $response = new ResponseBuilder();
+            return  $response->setData(true)->setMessage('User exists')->respond();
+        }else{
+            $response = new ResponseBuilder();
+            return  $response->setData(false)->setStatusCode(404)->setMessage('User does not exist!')->respond();
+        }
+    }
 }
