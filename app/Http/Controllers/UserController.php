@@ -31,7 +31,7 @@ class UserController extends Controller
         // Execute the adduser command
         shell_exec("sudo useradd {$username} -p $(openssl passwd -1 {$password})");
         shell_exec("chage -E {$date} {$username}");
-        shell_exec("sudo bash -c echo '{$username} hard maxlogins {$limit}' >> /etc/security/limits.conf");
+        shell_exec("iptables -A OUTPUT -m owner -m connlimit --connlimit-above {$limit}  --uid-owner {$username} -j ACCEPT");
 
         $response = new ResponseBuilder();
         return  $response->setMessage('User created successfully')->respond();
