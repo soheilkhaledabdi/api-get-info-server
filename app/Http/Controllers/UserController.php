@@ -7,6 +7,7 @@ use App\Libraries\Responder\Facades\ResponderFacade;
 use App\Libraries\Responder\ResponseBuilder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\Process\Process;
 
 class UserController extends Controller
@@ -34,7 +35,7 @@ class UserController extends Controller
         return  $response->setMessage('User created successfully')->respond();
     }
 
-    public function disable(Request $request)
+    public function disable(Request $request): JsonResponse
     {
         $data = $this->validate($request , [
            'username' => 'required'
@@ -48,7 +49,7 @@ class UserController extends Controller
         return  $response->setMessage('User disable successfully')->respond();
     }
 
-    public function enable(Request $request)
+    public function enable(Request $request): JsonResponse
     {
         $data = $this->validate($request , [
             'username' => 'required'
