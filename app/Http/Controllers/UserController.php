@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 
 use App\Libraries\Responder\Facades\ResponderFacade;
 use App\Libraries\Responder\ResponseBuilder;
+use DateTime;
+use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -63,7 +65,6 @@ class UserController extends Controller
         return  $response->setMessage('User enable successfully')->respond();
     }
 
-
     public function delete(Request $request): JsonResponse
     {
         $data = $this->validate($request , [
@@ -94,5 +95,34 @@ class UserController extends Controller
             $response = new ResponseBuilder();
             return  $response->setData(false)->setStatusCode(404)->setMessage('User does not exist!')->respond();
         }
+    }
+
+    public function is_user_active(Request $request)
+    {
+        $data = $this->validate($request,[
+            'username' => 'required'
+        ]);
+
+        $response = new ResponseBuilder();
+
+        $result = shell_exec("chage -l {$data['username']}");
+        $output = explode(PHP_EOL, trim($result));
+        foreach ($output as $line) {
+            if (strpos($line, 'Account expires') !== false) {
+                list($label, $dateStr) = explode(':', $line, 2);
+                $dateStr = trim($dateStr);
+                if ($dateStr === 'never') {
+                    return  $response->setData(true)->setMessage('Unlimited users')->respond();
+                }
+                $expirationDate = DateTime::createFromFormat('M d, Y', $dateStr);
+                $expirationDate = $expirationDate->format('Y-m-d H:i:s');
+                if (new DateTime() > $expirationDate) {
+                    return  $response->setData(true)->setMessage("The user is active , Expiration date : {$expirationDate}")->respond();
+                } else {
+                    return  $response->setData(true)->setMessage("The user is inactive , Expiration date : {$expirationDate}")->respond();
+                }
+            }
+        }
+        return  $response->setData(false)->setMessage("There is a problem or user does not exist!")->respond();
     }
 }
