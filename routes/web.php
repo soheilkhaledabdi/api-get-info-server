@@ -10,9 +10,13 @@ $router->get('/diskUsage' ,'monitoringController@diskUsage');
 $router->get('/cpuAndRam' ,'monitoringController@cpuAndRam');
 $router->get('/onlineUser' ,'monitoringController@onlineUser');
 
-$router->post('/users/create' ,'UserController@create');
-$router->post('/users/disable' ,'UserController@disable');
-$router->post('/users/enable' ,'UserController@enable');
-$router->post('/users/delete' ,'UserController@enable');
-$router->post('/users/check' ,'UserController@check_user_exsit');
-$router->post('/users/active' ,'UserController@is_user_active');
+
+$router->group(['prefix' => 'users'] , function () use ($router){
+    $router->post('/create' ,'UserController@create');
+    $router->post('/disable' ,'UserController@disable');
+    $router->post('/enable' ,'UserController@enable');
+    $router->post('/delete' ,'UserController@enable');
+    $router->post('/check' ,'UserController@check_user_exsit');
+    $router->post('/active' ,'UserController@is_user_active');
+});
+
