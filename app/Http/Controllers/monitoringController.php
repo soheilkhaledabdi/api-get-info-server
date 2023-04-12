@@ -78,6 +78,7 @@ class monitoringController extends Controller
     {
         $response = new ResponseBuilder();
         $count = shell_exec('ps -aux | grep sshd | grep priv -c');
+        $count= (int)str_replace("\n", "", $count);
         return  $response->setData(['count' => $count])->setMessage('It was successful')->respond();
     }
     public function update() : JsonResponse
