@@ -93,8 +93,25 @@ class monitoringController extends Controller
         $matches = [];
         $users = shell_exec('ps -aux | grep sshd | grep priv');
          preg_match_all("/sshd: (\w+)/", $users, $matches);
+        $results = array();
+        foreach ($matches[1] as $item) {
+            if (array_key_exists($item, $results)) {
+                $results[$item]++;
+            }
+            else {
+                $results[$item] = 1;
+            }
+        }
 
-        return  $response->setData(['users' => $matches[1]])->setMessage('It was successful')->respond();
+        $results = array_filter($results, function($count) {
+            return $count > 1;
+        });
+        $test = [];
+        foreach ($results as $key => $value) {
+            array_push($test ,$key . ' => [' . $value . ']' . "\n");
+        }
+
+        return  $response->setData(['users' => $test])->setMessage('It was successful')->respond();
 
     }
 
