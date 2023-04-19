@@ -87,33 +87,39 @@ class monitoringController extends Controller
         return  $response->setData(['count' => $count])->setMessage('It was successful')->respond();
     }
 
-    public function getAllUser(): JsonResponse
+    public function getAllUsers(): JsonResponse
     {
-        $response = new ResponseBuilder();
-        $matches = [];
+        $responseBuilder = new ResponseBuilder();
+
         $users = shell_exec('ps -aux | grep sshd | grep priv');
-         preg_match_all("/sshd: (\w+)/", $users, $matches);
-        $results = array();
-        foreach ($matches[1] as $item) {
-            if (array_key_exists($item, $results)) {
-                $results[$item]++;
+
+        preg_match_all("/sshd: (\w+)/", $users, $matches);
+
+        $userCounts = array();
+        foreach ($matches[1] as $username) {
+            if (array_key_exists($username, $userCounts)) {
+                $userCounts[$username]++;
             }
             else {
-                $results[$item] = 1;
+                $userCounts[$username] = 1;
             }
         }
 
-        $results = array_filter($results, function($count) {
+        $duplicateUsers = array_filter($userCounts, function($count) {
             return $count > 1;
         });
-        $test = [];
-        foreach ($results as $key => $value) {
-            array_push($test ,$key . ' => [' . $value . ']' . "\n");
+
+        $resultStrings = [];
+        foreach ($duplicateUsers as $username => $count) {
+            $resultStrings[] = $username . ' => [' . $count . ']';
         }
 
-        return  $response->setData(['users' => $test])->setMessage('It was successful')->respond();
-
+        return $responseBuilder
+            ->setData(['users' => $resultStrings])
+            ->setMessage('The operation was successful')
+            ->respond();
     }
+
 
     public function update() : JsonResponse
     {
