@@ -79,7 +79,7 @@ class monitoringController extends Controller
         return  $response->setData(['memory' => $memory,'totalRAM' => $totalram,'usedMEMInGB' =>$usedmemInGB ,'load' => $load])->setMessage('It was successful')->respond();
     }
 
-    public function onlineUser()
+    public function onlineUser(): JsonResponse
     {
         $response = new ResponseBuilder();
         $count = shell_exec('ps -aux | grep sshd | grep priv -c');
@@ -87,16 +87,17 @@ class monitoringController extends Controller
         return  $response->setData(['count' => $count])->setMessage('It was successful')->respond();
     }
 
-    public function getAllUser()
+    public function getAllUser(): JsonResponse
     {
+        $response = new ResponseBuilder();
         $matches = [];
-        $users_list = [];
         $users = shell_exec('ps -aux | grep sshd | grep priv');
          preg_match_all("/sshd: (\w+)/", $users, $matches);
 
-         return $matches[1];
+        return  $response->setData(['users' => $matches[1]])->setMessage('It was successful')->respond();
 
     }
+
     public function update() : JsonResponse
     {
         shell_exec('apt install update');
