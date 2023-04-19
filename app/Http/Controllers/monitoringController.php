@@ -95,7 +95,7 @@ class monitoringController extends Controller
 
         preg_match_all("/sshd: (\w+)/", $users, $matches);
 
-        return $matches;
+        return response()->json($matches);
 //        $userCounts = array();
 //        foreach ($matches[1] as $username) {
 //            if (array_key_exists($username, $userCounts)) {
