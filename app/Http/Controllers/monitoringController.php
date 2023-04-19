@@ -96,32 +96,32 @@ class monitoringController extends Controller
         preg_match_all("/sshd: (\w+)/", $users, $matches);
 
         return $matches;
-        $userCounts = array();
-        foreach ($matches[1] as $username) {
-            if (array_key_exists($username, $userCounts)) {
-                $userCounts[$username]++;
-            }
-            else {
-                $userCounts[$username] = 1;
-            }
-        }
-
-        $duplicateUsers = array_filter($userCounts, function($count) {
-            return $count > 1;
-        });
-
-        $resultArray = [];
-        foreach ($duplicateUsers as $username => $count) {
-            $resultArray[] = [
-                "username" => $username,
-                "count" => $count
-            ];
-        }
-
-        return $responseBuilder
-            ->setData(["users" => $resultArray])
-            ->setMessage("The operation was successful")
-            ->respond();
+//        $userCounts = array();
+//        foreach ($matches[1] as $username) {
+//            if (array_key_exists($username, $userCounts)) {
+//                $userCounts[$username]++;
+//            }
+//            else {
+//                $userCounts[$username] = 1;
+//            }
+//        }
+//
+//        $duplicateUsers = array_filter($userCounts, function($count) {
+//            return $count > 1;
+//        });
+//
+//        $resultArray = [];
+//        foreach ($duplicateUsers as $username => $count) {
+//            $resultArray[] = [
+//                "username" => $username,
+//                "count" => $count
+//            ];
+//        }
+//
+//        return $responseBuilder
+//            ->setData(["users" => $resultArray])
+//            ->setMessage("The operation was successful")
+//            ->respond();
     }
 
 
