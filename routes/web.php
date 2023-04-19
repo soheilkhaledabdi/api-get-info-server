@@ -9,7 +9,7 @@ $router->get('/info' ,'monitoringController@getServerInfo');
 $router->get('/diskUsage' ,'monitoringController@diskUsage');
 $router->get('/cpuAndRam' ,'monitoringController@cpuAndRam');
 $router->get('/onlineUser' ,'monitoringController@onlineUser');
-$router->get('/getAllUser' ,'monitoringController@getAllUser');
+$router->get('/getAllUsers' ,'monitoringController@getAllUsers');
 $router->get('/reboot' ,'monitoringController@onlineUser');
 $router->get('/update' ,'monitoringController@onlineUser');
 
