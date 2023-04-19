@@ -90,8 +90,14 @@ class monitoringController extends Controller
     public function getAllUser()
     {
         $matches = [];
+        $users_list = [];
         $users = shell_exec('ps -aux | grep sshd | grep priv');
          preg_match_all("/sshd: (\w+)/", $users, $matches);
+         foreach ($matches[0] as $match)
+         {
+             $t = str_replace('sshd: ' , '' , $match);
+             array_push($users_list , $t);
+         }
          return $matches;
 
     }
