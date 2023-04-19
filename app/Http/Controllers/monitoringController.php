@@ -11,6 +11,7 @@ class monitoringController extends Controller
     public function uptime(): JsonResponse
     {
         $uptime = shell_exec('uptime');
+        $uptime = str_replace("\n", "", $uptime);
         $response = new ResponseBuilder();
         return  $response->setData(["uptime" => $uptime])->setMessage('It was successful')->respond();
     }
@@ -20,6 +21,10 @@ class monitoringController extends Controller
         $uname = shell_exec('uname -rsoi');
         $host = shell_exec('hostname');
         $ip = shell_exec('hostname -I');
+
+        $uname = str_replace("\n", "", $uname);
+        $host = str_replace("\n" , "" , $host);
+        $ip = str_replace(["\n" , " " ] , "",$ip);
 
         $response = new ResponseBuilder();
         return  $response->setData(['uName' =>  $uname , 'host' => $host , 'ip' => $ip])->setMessage('It was successful')->respond();
@@ -80,6 +85,15 @@ class monitoringController extends Controller
         $count = shell_exec('ps -aux | grep sshd | grep priv -c');
         $count= (int)str_replace("\n", "", $count);
         return  $response->setData(['count' => $count])->setMessage('It was successful')->respond();
+    }
+
+    public function getAllUser()
+    {
+        $matches = [];
+        $users = shell_exec('ps -aux | grep sshd | grep priv');
+         preg_match_all("/sshd: (\w+)/", $users, $matches);
+         return $matches;
+
     }
     public function update() : JsonResponse
     {
