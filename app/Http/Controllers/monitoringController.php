@@ -109,14 +109,17 @@ class monitoringController extends Controller
             return $count > 1;
         });
 
-        $resultStrings = [];
+        $resultArray = [];
         foreach ($duplicateUsers as $username => $count) {
-            $resultStrings[] = $username . ' => [' . $count . ']';
+            $resultArray[] = [
+                "username" => $username,
+                "count" => $count
+            ];
         }
 
         return $responseBuilder
-            ->setData(['users' => $resultStrings])
-            ->setMessage('The operation was successful')
+            ->setData(["users" => $resultArray])
+            ->setMessage("The operation was successful")
             ->respond();
     }
 
