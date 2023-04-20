@@ -16,25 +16,30 @@ class UserController extends Controller
 {
     public function create(Request $request): JsonResponse
     {
-        $Data =  $this->validate($request , [
-            'username' => 'required',
-            'password' => 'required',
-            'date' => 'required',
-            'limit' => 'required'
-        ]);
+        try {
+            $data = $this->validate($request, [
+                'username' => 'required',
+                'password' => 'required',
+                'date' => 'required',
+                'limit' => 'required'
+            ]);
 
-        $username = $Data['username'];
-        $password = $Data['password'];
-        $date = $Data['date'];
-        $limit = $Data['limit'];
+            $username = $data['username'];
+            $password = $data['password'];
+            $date = $data['date'];
+            $limit = $data['limit'];
 
-        // Execute the adduser command
-        shell_exec("sudo useradd {$username} -p $(openssl passwd -1 {$password})");
-        shell_exec("chage -E {$date} {$username}");
-        shell_exec("iptables -A OUTPUT -m owner -m connlimit --connlimit-above {$limit}  --uid-owner {$username} -j ACCEPT");
+            // Execute the adduser command
+            shell_exec("sudo useradd {$username} -p $(openssl passwd -1 {$password})");
+            shell_exec("chage -E {$date} {$username}");
+            shell_exec("iptables -A OUTPUT -m owner -m connlimit --connlimit-above {$limit}  --uid-owner {$username} -j ACCEPT");
 
-        $response = new ResponseBuilder();
-        return  $response->setMessage('User created successfully')->respond();
+            $response = new ResponseBuilder();
+            return $response->setMessage('User created successfully')->respond();
+        } catch (\Throwable $th) {
+            $response = new ResponseBuilder();
+            return $response->setStatusCode(400)->setMessage($th->getMessage())->respond();
+        }
     }
 
     public function disable(Request $request): JsonResponse
