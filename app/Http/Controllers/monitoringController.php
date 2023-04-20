@@ -10,7 +10,7 @@ class monitoringController extends Controller
 {
     public function uptime(): JsonResponse
     {
-        $uptime = shell_exec('uptime');
+        $uptime = shell_exec('uptime -p');
         $uptime = str_replace("\n", "", $uptime);
         $response = new ResponseBuilder();
         return  $response->setData(["uptime" => $uptime])->setMessage('It was successful')->respond();
