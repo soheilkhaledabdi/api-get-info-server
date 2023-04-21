@@ -29,13 +29,22 @@ class UserController extends Controller
             $date = $data['date'];
             $limit = $data['limit'];
 
-            // Execute the adduser command
-            shell_exec("sudo useradd {$username} -p $(openssl passwd -1 {$password})");
-            shell_exec("chage -E {$date} {$username}");
-            shell_exec("iptables -A OUTPUT -m owner -m connlimit --connlimit-above {$limit}  --uid-owner {$username} -j ACCEPT");
+            $output = '';
 
-            $response = new ResponseBuilder();
-            return $response->setMessage('User created successfully')->respond();
+            exec("id -u {$username}", $output);
+
+            if (count($output) < 0 ) {
+                // Execute the adduser command
+                shell_exec("sudo useradd {$username} -p $(openssl passwd -1 {$password})");
+                shell_exec("chage -E {$date} {$username}");
+                shell_exec("iptables -A OUTPUT -m owner -m connlimit --connlimit-above {$limit}  --uid-owner {$username} -j ACCEPT");
+
+                $response = new ResponseBuilder();
+                return $response->setData(true)->setMessage('User created successfully')->respond();
+            }else{
+                $response = new ResponseBuilder();
+                return  $response->setData(false)->setMessage('User exist!')->respond();
+            }
         } catch (\Throwable $th) {
             $response = new ResponseBuilder();
             return $response->setStatusCode(400)->setMessage($th->getMessage())->respond();
