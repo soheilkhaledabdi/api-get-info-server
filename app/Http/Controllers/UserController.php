@@ -29,8 +29,6 @@ class UserController extends Controller
             $date = $data['date'];
             $limit = $data['limit'];
 
-            $output = '';
-
             exec("id -u {$username}", $output);
 
             if (count($output) > 0 ) {
