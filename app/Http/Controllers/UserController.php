@@ -82,12 +82,17 @@ class UserController extends Controller
         $data = $this->validate($request , [
             'username' => 'required'
         ]);
-
-        shell_exec("userdel -r {$data['username']}");
-
         $response = new ResponseBuilder();
+        $output = '';
 
-        return  $response->setMessage('User delete successfully')->respond();
+        exec("id -u {$data['username']}", $output);
+
+        if (count($output) > 0 ) {
+            return  $response->setData(false)->setMessage('User dose not exists')->respond();
+        }else{
+            shell_exec("userdel -r {$data['username']}");
+            return  $response->setData(true)->setMessage('User delete successfully')->respond();
+        }
     }
 
     public function check_user_exsit(Request $request): JsonResponse
