@@ -88,10 +88,10 @@ class UserController extends Controller
         exec("id -u {$data['username']}", $output);
 
         if (count($output) > 0 ) {
-            return  $response->setData(false)->setMessage('User dose not exists')->respond();
-        }else{
             shell_exec("userdel -r {$data['username']}");
             return  $response->setData(true)->setMessage('User delete successfully')->respond();
+        }else{
+            return  $response->setData(false)->setMessage('User dose not exists')->respond();
         }
     }
 
