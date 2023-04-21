@@ -33,7 +33,10 @@ class UserController extends Controller
 
             exec("id -u {$username}", $output);
 
-            if (count($output) < 0 ) {
+            if (count($output) > 0 ) {
+                $response = new ResponseBuilder();
+                return  $response->setData(false)->setMessage('User exist!')->respond();
+            }else{
                 // Execute the adduser command
                 shell_exec("sudo useradd {$username} -p $(openssl passwd -1 {$password})");
                 shell_exec("chage -E {$date} {$username}");
@@ -41,9 +44,6 @@ class UserController extends Controller
 
                 $response = new ResponseBuilder();
                 return $response->setData(true)->setMessage('User created successfully')->respond();
-            }else{
-                $response = new ResponseBuilder();
-                return  $response->setData(false)->setMessage('User exist!')->respond();
             }
         } catch (\Throwable $th) {
             $response = new ResponseBuilder();
